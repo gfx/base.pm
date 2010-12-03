@@ -25,7 +25,7 @@ sub has_fields {
 sub has_version {
     my($base) = shift;
     my $vglob = ${$base.'::'}{VERSION};
-    return( ($vglob && *$vglob{SCALAR}) ? 1 : 0 );
+    return( ($vglob && *$vglob{SCALAR} && defined(${ $vglob })) ? 1 : 0 );
 }
 
 sub has_attr {
@@ -81,7 +81,7 @@ sub import {
         next if grep $_->isa($base), ($inheritor, @bases);
 
         if (has_version($base)) {
-            ${$base.'::VERSION'} = '-1, set by base.pm' 
+            ${$base.'::VERSION'} = '-1, set by base.pm'
               unless defined ${$base.'::VERSION'};
         }
         else {
@@ -215,7 +215,7 @@ file as yourself, like so:
 
         package Foo;
         sub exclaim { "I can have such a thing?!" }
-        
+
         package Bar;
         use base "Foo";
 
